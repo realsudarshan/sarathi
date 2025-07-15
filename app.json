@@ -8,6 +8,11 @@
     "scheme": "uber",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/splashscreen.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2F80ED"
+    },
     "ios": {
       "supportsTablet": true
     },
