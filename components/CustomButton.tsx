@@ -1,34 +1,32 @@
 import { TouchableOpacity,Text } from "react-native";
 import {ButtonProps} from "@/types/type"
-const getBgVariantStyle=(variant:ButtonProps["bgVariant"])=>{
- switch (variant) {
-    case "secondary":
-      return "bg-gray-500";
-    case "danger":
-      return "bg-red-500";
-    case "success":
-      return "bg-green-500";
-    case "outline":
-      return "bg-transparent border-neutral-300 border-[0.5px]";
-    default:
-      return "bg-[#0286FF]";
-  }
-
-}
-const getTextVariantStyle = (variant: ButtonProps["textVariant"]) => {
-  switch (variant) {
-    case "primary":
-      return "text-black";
-    case "secondary":
-      return "text-gray-100";
-    case "danger":
-      return "text-red-100";
-    case "success":
-      return "text-green-100";
-    default:
-      return "text-white";
-  }
+//It creates a type-safe object where:
+//The keys are all valid, non-null, non-undefined values of ButtonProps["bgVariant"]
+//The values are string (your Tailwind classes)
+ const bgVariantStyles: Record<NonNullable<ButtonProps["bgVariant"]>, string> = {
+  primary:"bg-gray-600",
+  secondary: "bg-gray-500",
+  danger: "bg-red-500",
+  success: "bg-green-500",
+  outline: "bg-transparent border-neutral-300 border-[0.5px]",
+  // add more variants here...
 };
+const getBgVariantStyle = (variant?: ButtonProps["bgVariant"]) => {
+  return bgVariantStyles[variant!] ?? "bg-[#0286FF]";
+};
+const textVariantStyles: Record<NonNullable<ButtonProps["textVariant"]>, string> = {
+  default:"text-white",
+    primary: "text-black",
+  secondary: "text-gray-100",
+  danger: "text-red-100",
+  success: "text-green-100",
+};
+
+const getTextVariantStyle = (variant?: ButtonProps["textVariant"]) => {
+  return textVariantStyles[variant!] ?? "text-white";
+};
+
+
 const CustomButton = ({
   onPress,
   title,
