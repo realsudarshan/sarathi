@@ -5,10 +5,9 @@ import { Redirect } from 'expo-router';
 const index = () => {
     const isSignedIn=false;
     if(!isSignedIn){
-        return <Redirect href="/(auth)/signup"/>
+        return <Redirect href="/(auth)/welcome"/>
     }else
   return  <Redirect href="/(root)/book_ride"/>
-  
 }
 
 export default index

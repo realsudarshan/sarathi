@@ -27,7 +27,7 @@ const getTextVariantStyle = (variant?: ButtonProps["textVariant"]) => {
 };
 
 
-const CustomButton = ({
+export const CustomButton = ({
   onPress,
   title,
   bgVariant = "primary",
