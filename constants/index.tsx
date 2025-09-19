@@ -81,21 +81,20 @@ export const onboarding = [
     title: "The perfect ride is just a tap away!",
     description:
       "Your journey begins with Ryde. Find your ideal ride effortlessly.",
-      image: require("../assets/images/onboarding1.png"),  // adjust path based on file location
-
+    image: require("@/assets/images/onboarding1.png"),
   },
   {
     id: 2,
     title: "Best car in your hands with Ryde",
     description:
       "Discover the convenience of finding your perfect ride with Ryde",
-    image: require("../assets/images/onboarding2.png"),
+    image: require("@/assets/images/onboarding2.png"),
   },
   {
     id: 3,
     title: "Your ride, your way. Let's go!",
     description:
       "Enter your destination, sit back, and let us take care of the rest.",
-    image: require("../assets/images/onboarding3.png"),
+    image: require("@/assets/images/onboarding3.png"),
   },
 ];
