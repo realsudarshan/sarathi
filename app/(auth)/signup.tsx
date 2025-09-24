@@ -15,6 +15,7 @@ import { z } from 'zod';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth, useSignUp } from '@clerk/clerk-expo'
 import { useRouter } from 'expo-router';
+import { fetchAPI } from '@/lib/fetch';
 // Zod validation schema
 const signupSchema = z.object({
   fullName: z
@@ -41,6 +42,7 @@ const Signup = () => {
   const [pendingVerification, setPendingVerification] = React.useState(false)
   const { isLoaded, signUp, setActive } = useSignUp()
   const [code, setCode] = React.useState('')
+  const [userData, setUserData] = useState<{ fullName: string; email: string } | null>(null);
   const router = useRouter()
   const {
     control,
@@ -86,14 +88,15 @@ const Signup = () => {
         return;
       }
 
-      // Simulate API call
+     
       await signUp.create({
         emailAddress:data.email,
         password:data.password,
       })
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
-
+      setUserData({ fullName: data.fullName, email: data.email });
       setPendingVerification(true)
+
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again.');
     }
@@ -110,8 +113,16 @@ const Signup = () => {
       // If verification was completed, set the session to active
       // and redirect the user
       if (signUpAttempt.status === 'complete') {
+        await fetchAPI("/(api)/user", {
+          method: "POST",
+          body: JSON.stringify({
+            name: userData?.fullName,
+            email: userData?.email,
+            clerkId: signUpAttempt.createdUserId, // <-- use from attempt
+          }),
+        });
         await setActive({ session: signUpAttempt.createdSessionId })
-        router.replace('/(root)/book_ride')
+        router.replace('/(root)/(tabs)/home')
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.

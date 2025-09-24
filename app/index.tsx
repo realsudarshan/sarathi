@@ -17,7 +17,7 @@ const index = () => {
 
   // Redirect based on authentication state
   if (isSignedIn) {
-    return <Redirect href="/(root)/book_ride" />
+    return <Redirect href="/(root)/(tabs)/home" />
   } else {
     return <Redirect href="/(auth)/welcome" />
   }

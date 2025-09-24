@@ -2,6 +2,8 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useClerk } from '@clerk/clerk-expo'
 import { useRouter } from 'expo-router'
+import { SafeAreaView } from 'react-native-safe-area-context'
+//displays ride details and handles the payment process
 const Bookride = () => {
   const { signOut } = useClerk()
   const router = useRouter()
@@ -17,12 +19,12 @@ const Bookride = () => {
     }
   }
   return (
-    <View>
+    <SafeAreaView>
       <Text>Bookride</Text>
       <TouchableOpacity onPress={handleSignOut}>
       <Text>Sign out</Text>
     </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   )
 }
 
