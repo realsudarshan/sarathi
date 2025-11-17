@@ -83,7 +83,7 @@ const Signin = () => {
 
       if (signInAttempt.status === 'complete') {
         await setActive({ session: signInAttempt.createdSessionId });
-        router.replace('/(root)/book_ride');
+        router.replace('/(root)/(tabs)/home');
       } else {
         console.error(JSON.stringify(signInAttempt, null, 2));
         Alert.alert('Error', 'Sign in failed. Please check your credentials.');

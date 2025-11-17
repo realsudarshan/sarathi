@@ -76,7 +76,7 @@ const Home = () => {
 
   return (
     <SafeAreaView className="bg-general-500">
-      <FlatList
+      {/* <FlatList
         data={recentRides?.slice(0, 5)}
         renderItem={({ item }) => <RideCard ride={item} />}
         keyExtractor={(item, index) => index.toString()}
@@ -136,7 +136,8 @@ const Home = () => {
             </Text>
           </>
         }
-      />
+      /> */}
+      Hello
     </SafeAreaView>
   );
 };

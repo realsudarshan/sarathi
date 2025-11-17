@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
-import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
-import MapViewDirections from "react-native-maps-directions";
+import { ActivityIndicator, Text, View, StyleSheet, Platform } from "react-native";
+import { AppleMaps, GoogleMaps } from "expo-maps";
 
 import { icons } from "@/constants";
 import { useFetch } from "@/lib/fetch";
@@ -13,7 +12,7 @@ import {
 import { useDriverStore, useLocationStore } from "@/store";
 import { Driver, MarkerData } from "@/types/type";
 
-const directionsAPI = process.env.EXPO_PUBLIC_DIRECTIONS_API_KEY;
+const directionsAPI = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
 
 const Map = () => {
   const {
@@ -26,7 +25,9 @@ const Map = () => {
 
   const { data: drivers, loading, error } = useFetch<Driver[]>("/(api)/driver");
   const [markers, setMarkers] = useState<MarkerData[]>([]);
-
+  const [routeCoordinates, setRouteCoordinates] = useState<
+    { latitude: number; longitude: number }[]
+  >([]);
   useEffect(() => {
     if (Array.isArray(drivers)) {
       if (!userLatitude || !userLongitude) return;
@@ -44,8 +45,10 @@ const Map = () => {
   useEffect(() => {
     if (
       markers.length > 0 &&
-      destinationLatitude !== undefined &&
-      destinationLongitude !== undefined
+      destinationLatitude !== null &&
+      destinationLongitude !== null &&
+      userLatitude !== null &&
+      userLongitude !== undefined
     ) {
       calculateDriverTimes({
         markers,
@@ -53,11 +56,98 @@ const Map = () => {
         userLongitude,
         destinationLatitude,
         destinationLongitude,
-      }).then((drivers) => {
-        setDrivers(drivers as MarkerData[]);
+      })
+        .then((drivers) => {
+          setDrivers(drivers as MarkerData[]);
+        })
+        .catch((error) => {
+          console.error("Failed to calculate driver times:", error);
+        });
+    }
+  }, [
+    markers,
+    destinationLatitude,
+    destinationLongitude,
+    userLatitude,
+    userLongitude,
+    setDrivers,
+  ]);
+
+  // Fetch route coordinates when destination is set
+  useEffect(() => {
+    if (
+      userLatitude &&
+      userLongitude &&
+      destinationLatitude &&
+      destinationLongitude
+    ) {
+      fetchRouteCoordinates();
+    } else {
+      setRouteCoordinates([]);
+    }
+  }, [userLatitude, userLongitude, destinationLatitude, destinationLongitude]);
+
+  const fetchRouteCoordinates = async () => {
+    try {
+      if (!directionsAPI) {
+        console.warn("Google API key not configured");
+        return;
+      }
+
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${userLatitude},${userLongitude}&destination=${destinationLatitude},${destinationLongitude}&key=${directionsAPI}`
+      );
+
+      const data = await response.json();
+
+      if (data.routes && data.routes.length > 0) {
+        const points = decodePolyline(
+          data.routes[0].overview_polyline.points
+        );
+        setRouteCoordinates(points);
+      }
+    } catch (error) {
+      console.error("Failed to fetch route:", error);
+    }
+  };
+//fix it
+  // Decode Google's encoded polyline format
+  const decodePolyline = (encoded: string) => {
+    const poly: { latitude: number; longitude: number }[] = [];
+    let index = 0,
+      len = encoded.length;
+    let lat = 0,
+      lng = 0;
+
+    while (index < len) {
+      let b,
+        shift = 0,
+        result = 0;
+      do {
+        b = encoded.charCodeAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      const dlat = (result & 1) !== 0 ? ~(result >> 1) : result >> 1;
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.charCodeAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      const dlng = (result & 1) !== 0 ? ~(result >> 1) : result >> 1;
+      lng += dlng;
+
+      poly.push({
+        latitude: lat / 1e5,
+        longitude: lng / 1e5,
       });
     }
-  }, [markers, destinationLatitude, destinationLongitude]);
+    return poly;
+  };
 
   const region = calculateRegion({
     userLatitude,
@@ -68,71 +158,110 @@ const Map = () => {
 
   if (loading || (!userLatitude && !userLongitude))
     return (
-      <View className="flex justify-between items-center w-full">
+      <View className="flex justify-center items-center w-full h-full">
         <ActivityIndicator size="small" color="#000" />
       </View>
     );
 
   if (error)
     return (
-      <View className="flex justify-between items-center w-full">
+      <View className="flex justify-center items-center w-full h-full">
         <Text>Error: {error}</Text>
       </View>
     );
 
-  return (
-    <MapView
-      provider={PROVIDER_DEFAULT}
-      className="w-full h-full rounded-2xl"
-      tintColor="black"
-      mapType="mutedStandard"
-      showsPointsOfInterests={false}
-      initialRegion={region}
-      showsUserLocation={true}
-      userInterfaceStyle="light"
-    >
-      {markers.map((marker, index) => (
-        <Marker
-          key={marker.id}
-          coordinate={{
-            latitude: marker.latitude,
-            longitude: marker.longitude,
-          }}
-          title={marker.title}
-          image={
-            selectedDriver === +marker.id ? icons.selectedMarker : icons.marker
-          }
-        />
-      ))}
+  // Prepare markers for the map
+  const mapMarkers = [
+    ...markers.map((marker) => ({
+      
+      coordinates: {
+        latitude: marker.latitude,
+        longitude: marker.longitude,
+      },
+      title: marker.title,
+      icon: selectedDriver === +marker.id ? icons.selectedMarker : icons.marker,
+    })),
+  ];
 
-      {destinationLatitude && destinationLongitude && (
-        <>
-          <Marker
-            key="destination"
-            coordinate={{
-              latitude: destinationLatitude,
-              longitude: destinationLongitude,
-            }}
-            title="Destination"
-            image={icons.pin}
-          />
-          <MapViewDirections
-            origin={{
-              latitude: userLatitude!,
-              longitude: userLongitude!,
-            }}
-            destination={{
-              latitude: destinationLatitude,
-              longitude: destinationLongitude,
-            }}
-            apikey={directionsAPI!}
-            strokeColor="#0286FF"
-            strokeWidth={2}
-          />
-        </>
-      )}
-    </MapView>
+  // Add destination marker if available
+  if (destinationLatitude && destinationLongitude) {
+    mapMarkers.push({
+      
+      coordinates: {
+        latitude: destinationLatitude,
+        longitude: destinationLongitude,
+      },
+      title: "Destination",
+      icon: icons.pin,
+    });
+  }
+
+
+
+  // Prepare polylines
+  const polylines =
+    routeCoordinates.length > 0
+      ? [
+          {
+            id: "route",
+            coordinates: routeCoordinates,
+            color: "#0286FF",
+            width: 3,
+          },
+        ]
+      : [];
+
+  const cameraPosition = {
+    coordinates: {
+      latitude: region.latitude,
+      longitude: region.longitude,
+    },
+    zoom: 14,
+  };
+
+  // Render for iOS (Apple Maps)
+  if (Platform.OS === "ios") {
+    return (
+      <AppleMaps.View
+        style={styles.map}
+     
+        markers={mapMarkers}
+        polylines={polylines}
+        
+        uiSettings={{
+          compassEnabled: false,
+          myLocationButtonEnabled: true,
+        }}
+      />
+    );
+  }
+
+  // Render for Android (Google Maps)
+  return (
+    <GoogleMaps.View
+      style={styles.map}
+     
+      markers={mapMarkers}
+      polylines={polylines}
+      properties={{
+      
+        isMyLocationEnabled: true,
+      }}
+      uiSettings={{
+        compassEnabled: false,
+        myLocationButtonEnabled: true,
+        zoomControlsEnabled: false,
+      }}
+    />
   );
 };
+
+const styles = StyleSheet.create({
+  map: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 16,
+  },
+});
 
 export default Map;

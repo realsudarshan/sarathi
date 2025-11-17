@@ -1,14 +1,31 @@
 import { neon } from "@neondatabase/serverless";
 
 export async function GET(request: Request, { id }: { id: string }) {
+  console.log("The ride id is",id);
   if (!id)
     return Response.json({ error: "Missing required fields" }, { status: 400 });
 
   try {
+    
     const sql = neon(`${process.env.DATABASE_URL}`);
+     const userResult = await sql`
+      SELECT id 
+      FROM users 
+      WHERE clerk_id = ${id}
+      LIMIT 1;
+    `;
+    
+    // Check if user exists
+    if (userResult.length === 0) {
+      return Response.json({ error: "User not found" }, { status: 404 });
+    }
+    
+    const userId = userResult[0].id;
+    console.log("The internal user_id is", userId);
+    
     const response = await sql`
         SELECT
-            rides.ride_id,
+            rides.id,
             rides.origin_address,
             rides.destination_address,
             rides.origin_latitude,
@@ -33,11 +50,11 @@ export async function GET(request: Request, { id }: { id: string }) {
         INNER JOIN
             drivers ON rides.driver_id = drivers.id
         WHERE 
-            rides.user_id = ${id}
+           rides.user_id = ${userId}
         ORDER BY 
             rides.created_at DESC;
     `;
-
+console.log("The response is",response);
     return Response.json({ data: response });
   } catch (error) {
     console.error("Error fetching recent rides:", error);

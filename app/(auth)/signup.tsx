@@ -137,17 +137,23 @@ const Signup = () => {
 
   if (pendingVerification) {
     return (
-      <>
-        <Text>Verify your email</Text>
-        <TextInput
-          value={code}
-          placeholder="Enter your verification code"
-          onChangeText={(code) => setCode(code)}
-        />
-        <TouchableOpacity onPress={onVerifyPress}>
-          <Text>Verify</Text>
-        </TouchableOpacity>
-      </>
+      <SafeAreaView className="flex-1 bg-white px-5 py-8">
+        <View className="flex-1 justify-center">
+          <Text className="text-2xl font-bold mb-4">Verify your email</Text>
+          <TextInput
+            className="border border-gray-300 rounded-lg px-4 py-3 mb-4"
+            value={code}
+            placeholder="Enter your verification code"
+            onChangeText={(code) => setCode(code)}
+          />
+          <TouchableOpacity 
+            onPress={onVerifyPress}
+            className="bg-blue-600 rounded-lg py-3"
+          >
+            <Text className="text-white text-center font-semibold">Verify</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     )
   }
 

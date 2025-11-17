@@ -1,5 +1,4 @@
-import { Image, Text, View } from "react-native";
-
+import { View, Text, Image } from "react-native";
 import { icons } from "@/constants";
 import { formatDate, formatTime } from "@/lib/utils";
 import { Ride } from "@/types/type";
@@ -19,7 +18,7 @@ const RideCard = ({ ride }: { ride: Ride }) => {
           <View className="flex flex-col mx-5 gap-y-5 flex-1">
             <View className="flex flex-row items-center gap-x-2">
               <Image source={icons.to} className="w-5 h-5" />
-              <Text className="text-md font-JakartaMedium" numberOfLines={1}>
+              <Text className="text-md font-JakartaMedium" numberOfLines={2}>
                 {ride.origin_address}
               </Text>
             </View>
@@ -54,7 +53,8 @@ const RideCard = ({ ride }: { ride: Ride }) => {
 
           <View className="flex flex-row items-center w-full justify-between mb-5">
             <Text className="text-md font-JakartaMedium text-gray-500">
-              Car Seats
+              Car Seate
+             
             </Text>
             <Text className="text-md font-JakartaBold">
               {ride.driver.car_seats}
