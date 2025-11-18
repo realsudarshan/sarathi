@@ -1,6 +1,5 @@
-const googlePlacesApiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
-import React from 'react';
-import { View, Image } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Image, TextInput } from 'react-native';
 import { GooglePlacesAutocomplete } from 'expo-google-places-autocomplete';
 import type { PlaceDetails, PlacesError } from 'expo-google-places-autocomplete';
 
@@ -25,6 +24,13 @@ export default function GoogleTextInput({
 }: GoogleTextInputProps) {
   // Make sure to set your API key
   const googlePlacesApiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY || 'YOUR_API_KEY';
+  const inputRef = useRef<TextInput | null>(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.setNativeProps({ text: initialLocation || '' });
+    }
+  }, [initialLocation]);
 
   const onSearchError = React.useCallback((error: PlacesError) => {
     console.error('Places search error:', error);
@@ -68,19 +74,20 @@ const longitude = place.coordinate.longitude
             height: 24,
           }}
         >
-          {/* <Image
+          <Image
             source={icon}
             style={{ width: 24, height: 24 }}
             resizeMode="contain"
-          /> */}
+          />
         </View>
       )}
       
       <GooglePlacesAutocomplete
         apiKey={googlePlacesApiKey}
-       
+        placeholder={initialLocation || 'Search for your address...'}
         onPlaceSelected={onPlaceSelected}
         onSearchError={onSearchError}
+        inputRef={inputRef}
         containerStyle={{
           width: '100%',
         }}

@@ -72,7 +72,7 @@ const Home = () => {
     
     setDestinationLocation(location);
 
-    router.push("/(root)/find_ride");
+    router.push("/(root)/(tabs)/rides");
   };
 
   return (
