@@ -69,6 +69,7 @@ const Home = () => {
     longitude: number;
     address: string;
   }) => {
+    console.log("Destination location selected:", location);
     setDestinationLocation(location);
 
     router.push("/(root)/find_ride");
@@ -76,7 +77,7 @@ const Home = () => {
 
   return (
     <SafeAreaView className="bg-general-500">
-      {/* <FlatList
+      <FlatList
         data={recentRides?.slice(0, 5)}
         renderItem={({ item }) => <RideCard ride={item} />}
         keyExtractor={(item, index) => index.toString()}
@@ -116,7 +117,7 @@ const Home = () => {
               </TouchableOpacity>
             </View>
 
-            <GoogleTextInput
+          <GoogleTextInput
               icon={icons.search}
               containerStyle="bg-white shadow-md shadow-neutral-300"
               handlePress={handleDestinationPress}
@@ -127,7 +128,7 @@ const Home = () => {
                 Your current location
               </Text>
               <View className="flex flex-row items-center bg-transparent h-[300px]">
-                <Map />
+                {/* <Map/> */}
               </View>
             </>
 
@@ -136,7 +137,7 @@ const Home = () => {
             </Text>
           </>
         }
-      /> */}
+      />
       Hello
     </SafeAreaView>
   );

@@ -1,96 +1,105 @@
-import { View, Image, Text } from "react-native";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-
-import { icons } from "@/constants";
-import { GoogleInputProps } from "@/types/type";
-
 const googlePlacesApiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
+import React from 'react';
+import { View, Image } from 'react-native';
+import { GooglePlacesAutocomplete } from 'expo-google-places-autocomplete';
+import type { PlaceDetails, PlacesError } from 'expo-google-places-autocomplete';
 
-const GoogleTextInput = ({
+interface GoogleTextInputProps {
+  icon?: any;
+  containerStyle?: string;
+  initialLocation?: string;
+  textInputBackgroundColor?: string;
+  handlePress: (location: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  }) => void;
+}
+
+export default function GoogleTextInput({
   icon,
-  initialLocation,
   containerStyle,
+  initialLocation,
   textInputBackgroundColor,
   handlePress,
-}: GoogleInputProps) => {
-  console.log("Google Places API Key:", googlePlacesApiKey);
-  if (!googlePlacesApiKey) {
-    return (
-      <View className={`flex flex-row items-center justify-center relative z-50 rounded-xl ${containerStyle}`}>
-        <View className="flex-row items-center p-3 bg-white rounded-xl w-full">
-          <Image source={icon ? icon : icons.search} className="w-6 h-6 mr-3" resizeMode="contain" />
-          <Text className="text-gray-500">Google Places API key not configured</Text>
-        </View>
-      </View>
-    );
-  }
+}: GoogleTextInputProps) {
+  // Make sure to set your API key
+  const googlePlacesApiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY || 'YOUR_API_KEY';
+  console.log('Google Places API Key:', googlePlacesApiKey);
+  const onSearchError = React.useCallback((error: PlacesError) => {
+    console.error('Places search error:', error);
+  }, []);
+
+  const onPlaceSelected = React.useCallback(
+    (place: PlaceDetails) => {
+      console.log("The place  is",place)
+      // Extract location data from PlaceDetails
+      console.log("Running onPlaceSelected")
+ const latitude = place.coordinate?.latitude
+const longitude = place.coordinate.longitude
+      const address = (place as any).formattedAddress || place.name || '';
+      console.log("Extracted location:", { latitude, longitude, address });
+
+      if (latitude && longitude) {
+        handlePress({
+          latitude,
+          longitude,
+          address,
+        });
+      }
+    },
+    [handlePress]
+  );
 
   return (
-    <View
-      className={`flex flex-row items-center justify-center relative z-50 rounded-xl ${containerStyle}`}
-    >Hello
-      {/* <GooglePlacesAutocomplete
-        fetchDetails={true}
-        placeholder="Search"
-        debounce={200}
-        styles={{
-          textInputContainer: {
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 20,
-            marginHorizontal: 20,
-            position: "relative",
-            shadowColor: "#d4d4d4",
-          },
-          textInput: {
-            backgroundColor: textInputBackgroundColor
-              ? textInputBackgroundColor
-              : "white",
-            fontSize: 16,
-            fontWeight: "600",
-            marginTop: 5,
-            width: "100%",
-            borderRadius: 200,
-          },
-          listView: {
-            backgroundColor: textInputBackgroundColor
-              ? textInputBackgroundColor
-              : "white",
-            position: "relative",
-            top: 0,
-            width: "100%",
-            borderRadius: 10,
-            shadowColor: "#d4d4d4",
-            zIndex: 99,
-          },
+    <View className={containerStyle || "bg-white shadow-md shadow-neutral-300"}>
+      {/* Icon Container */}
+      {icon && (
+        <View 
+          style={{
+            position: 'absolute',
+            left: 12,
+            top: '50%',
+            transform: [{ translateY: -12 }],
+            zIndex: 100,
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 24,
+            height: 24,
+          }}
+        >
+          {/* <Image
+            source={icon}
+            style={{ width: 24, height: 24 }}
+            resizeMode="contain"
+          /> */}
+        </View>
+      )}
+      
+      <GooglePlacesAutocomplete
+        apiKey={googlePlacesApiKey}
+       
+        onPlaceSelected={onPlaceSelected}
+        onSearchError={onSearchError}
+        containerStyle={{
+          width: '100%',
         }}
-        onPress={(data, details = null) => {
-          handlePress({
-            latitude: details?.geometry.location.lat!,
-            longitude: details?.geometry.location.lng!,
-            address: data.description,
-          });
+        searchInputStyle={{
+          backgroundColor: textInputBackgroundColor || 'white',
+          borderRadius: 200,
+          paddingLeft: icon ? 45 : 16, // Add padding if icon exists
+          height: 50,
         }}
-        query={{
-          key: googlePlacesApiKey,
-          language: "en",
+        inputContainerStyle={{
+          width: '100%',
         }}
-        renderLeftButton={() => (
-          <View className="justify-center items-center w-6 h-6">
-            <Image
-              source={icon ? icon : icons.search}
-              className="w-6 h-6"
-              resizeMode="contain"
-            />
-          </View>
-        )}
-        textInputProps={{
-          placeholderTextColor: "gray",
-          placeholder: initialLocation ?? "Where do you want to go?",
+        resultsContainerStyle={{
+          backgroundColor: textInputBackgroundColor || 'white',
+          width: '100%',
+          borderRadius: 10,
+          marginTop: 8,
         }}
-      /> */}
+      />
     </View>
   );
-};
-
-export default GoogleTextInput;
+}
