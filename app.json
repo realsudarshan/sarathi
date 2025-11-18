@@ -22,6 +22,11 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCQc4fDqpwVptDMWOPdAOrkk81_2Y3H_R4"
+        }
+      },
       "package": "com.anonymous.uber"
     },
     "web": {
@@ -40,7 +45,13 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-maps"
+     [
+        "expo-maps",
+        {
+          "requestLocationPermission": true,
+          "locationPermission": "Allow $(PRODUCT_NAME) to use your location"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

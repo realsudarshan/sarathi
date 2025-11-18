@@ -25,20 +25,20 @@ export default function GoogleTextInput({
 }: GoogleTextInputProps) {
   // Make sure to set your API key
   const googlePlacesApiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY || 'YOUR_API_KEY';
-  console.log('Google Places API Key:', googlePlacesApiKey);
+
   const onSearchError = React.useCallback((error: PlacesError) => {
     console.error('Places search error:', error);
   }, []);
 
   const onPlaceSelected = React.useCallback(
     (place: PlaceDetails) => {
-      console.log("The place  is",place)
+     
       // Extract location data from PlaceDetails
-      console.log("Running onPlaceSelected")
+  
  const latitude = place.coordinate?.latitude
 const longitude = place.coordinate.longitude
       const address = (place as any).formattedAddress || place.name || '';
-      console.log("Extracted location:", { latitude, longitude, address });
+      
 
       if (latitude && longitude) {
         handlePress({

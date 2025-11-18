@@ -69,7 +69,7 @@ const Home = () => {
     longitude: number;
     address: string;
   }) => {
-    console.log("Destination location selected:", location);
+    
     setDestinationLocation(location);
 
     router.push("/(root)/find_ride");
@@ -128,7 +128,7 @@ const Home = () => {
                 Your current location
               </Text>
               <View className="flex flex-row items-center bg-transparent h-[300px]">
-                {/* <Map/> */}
+                <Map />
               </View>
             </>
 
@@ -138,7 +138,6 @@ const Home = () => {
           </>
         }
       />
-      Hello
     </SafeAreaView>
   );
 };
