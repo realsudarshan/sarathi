@@ -38,6 +38,22 @@ export async function POST(request: Request) {
 
     const sql = neon(`${process.env.DATABASE_URL}`);
 
+    const userResult = await sql`
+      SELECT id 
+      FROM users 
+      WHERE clerk_id = ${user_id}
+      LIMIT 1;
+    `;
+
+    if (userResult.length === 0) {
+      return Response.json(
+        { error: "User not found" },
+        { status: 404 },
+      );
+    }
+
+    const actualUserId = userResult[0].id;
+
     const response = await sql`
       INSERT INTO rides ( 
           origin_address, 
@@ -62,14 +78,14 @@ export async function POST(request: Request) {
           ${fare_price},
           ${payment_status},
           ${driver_id},
-          ${user_id}
+          ${actualUserId}
       )
       RETURNING *;
     `;
 
     return Response.json({ data: response[0] }, { status: 201 });
   } catch (error) {
-    console.error("Error inserting data into recent_rides:", error);
+    console.error("Error inserting data into rides:", error);
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
