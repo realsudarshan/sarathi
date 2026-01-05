@@ -12,7 +12,9 @@
       "distribution": "internal"
     },
     "production": {
-      
+      "android": {
+        "image": "latest"
+      },
       "autoIncrement": true
     }
   },

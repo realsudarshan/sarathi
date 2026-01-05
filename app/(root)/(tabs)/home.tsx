@@ -39,7 +39,7 @@ const Home = () => {
     data: recentRides,
     loading,
     error,
-  } = useFetch<Ride[]>(`/(api)/ride/${user?.id}`);
+  } = useFetch<Ride[]>(`${process.env.EXPO_PUBLIC_SERVER_URL}/(api)/ride/${user?.id}`);
 
   useEffect(() => {
     (async () => {

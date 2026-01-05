@@ -98,7 +98,7 @@ const ActiveRide = ({ onRideComplete }: ActiveRideProps) => {
       console.log('Completing ride:', activeRide.id)
 
       // Update ride status to completed
-      const response = await fetch('/(api)/ride/complete-ride', {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/(api)/ride/complete-ride`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

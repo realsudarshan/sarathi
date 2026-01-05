@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Text, View, StyleSheet, Platform } from "react-native";
 import { AppleMaps, GoogleMaps } from "expo-maps";
+import { useImage } from "expo-image";
 
 import { icons } from "@/constants";
 import { useFetch } from "@/lib/fetch";
@@ -8,13 +9,20 @@ import { generateMarkersFromData } from "@/lib/map";
 import { useLocationStore } from "@/store";
 import { Driver, MarkerData } from "@/types/type";
 
-const googleApiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
+
 
 const Map = () => {
   const { userLongitude, userLatitude } = useLocationStore();
 
-  const { data: drivers, loading, error } = useFetch<Driver[]>("/(api)/driver");
+  const { data: drivers, loading, error } = useFetch<Driver[]>(`${process.env.EXPO_PUBLIC_SERVER_URL}/(api)/driver`);
   const [markers, setMarkers] = useState<MarkerData[]>([]);
+
+  // Create shared image refs for markers using expo-image's useImage hook
+  // Using local bike icon
+  const driverIcon = useImage(icons.bike, {
+    maxWidth: 48,
+    maxHeight: 48,
+  });
 
   // Fetch drivers and create markers
   useEffect(() => {
@@ -54,7 +62,6 @@ const Map = () => {
         longitude: userLongitude,
       },
       title: "Your Location",
-      icon: icons.selectedMarker,
     },
     ...markers.map((marker) => ({
       coordinates: {
@@ -62,9 +69,10 @@ const Map = () => {
         longitude: marker.longitude,
       },
       title: marker.title,
-      icon: icons.marker,
+      icon: driverIcon ?? undefined,
     })),
   ];
+  console.log("THe mapmarkers are", mapMarkers);
 
   const cameraPosition = {
     coordinates: {

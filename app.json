@@ -14,7 +14,10 @@
       "backgroundColor": "#2F80ED"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,8 +33,11 @@
       "package": "com.anonymous.uber",
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
-      ]
+      ],
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "bundler": "metro",
@@ -65,6 +71,9 @@
       "eas": {
         "projectId": "422f6f06-b45b-4278-9afa-13be9ab406da"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/422f6f06-b45b-4278-9afa-13be9ab406da"
     }
   }
 }

@@ -17,7 +17,7 @@ interface BookrideProps {
 const Bookride = ({ onBackPress }: BookrideProps) => {
   const { user } = useClerk()
   const router = useRouter()
-  const { data: drivers, loading: driversLoading } = useFetch<Driver[]>('/(api)/driver')
+  const { data: drivers, loading: driversLoading } = useFetch<Driver[]>(`${process.env.EXPO_PUBLIC_SERVER_URL}/(api)/driver`)
   const { userLatitude, userLongitude, userAddress, destinationLatitude, destinationLongitude, destinationAddress } = useLocationStore()
   const { setActiveRide } = useRideStore()
   const [isBooking, setIsBooking] = useState(false)
@@ -32,7 +32,7 @@ const Bookride = ({ onBackPress }: BookrideProps) => {
       setIsBooking(true)
 
       // Create ride in database
-      const response = await fetch('/(api)/ride/create', {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/(api)/ride/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
