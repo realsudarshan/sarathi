@@ -39,7 +39,7 @@ const Home = () => {
     data: recentRides,
     loading,
     error,
-  } = useFetch<Ride[]>(`/(api)/ride/${user?.id}`);
+  } = useFetch<Ride[]>(`${process.env.EXPO_PUBLIC_SERVER_URL}/(api)/ride/${user?.id}`);
 
   useEffect(() => {
     (async () => {
@@ -69,10 +69,10 @@ const Home = () => {
     longitude: number;
     address: string;
   }) => {
-    console.log("Destination location selected:", location);
+    
     setDestinationLocation(location);
 
-    router.push("/(root)/find_ride");
+    router.push("/(root)/(tabs)/rides");
   };
 
   return (
@@ -128,7 +128,7 @@ const Home = () => {
                 Your current location
               </Text>
               <View className="flex flex-row items-center bg-transparent h-[300px]">
-                {/* <Map/> */}
+                <Map />
               </View>
             </>
 
@@ -138,7 +138,6 @@ const Home = () => {
           </>
         }
       />
-      Hello
     </SafeAreaView>
   );
 };

@@ -26,6 +26,7 @@ declare interface MarkerData {
 }
 //mapprops
 declare interface Ride {
+    id?: number;
     origin_address: string;
     destination_address: string;
     origin_latitude: number;
@@ -37,8 +38,11 @@ declare interface Ride {
     payment_status: string;
     driver_id: number;
     user_id: string;
-    created_at: string;
-    driver: {
+    created_at?: string;
+    ride_status?: "in_progress" | "completed" | "cancelled";
+    current_latitude?: number;
+    current_longitude?: number;
+    driver?: {
       first_name: string;
       last_name: string;
       car_seats: number;

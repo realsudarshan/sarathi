@@ -1,6 +1,7 @@
 import arrowDown from "@/assets/icons/arrow-down.png";
 import arrowUp from "@/assets/icons/arrow-up.png";
 import backArrow from "@/assets/icons/back-arrow.png";
+import bike from "@/assets/icons/bike.png";
 import chat from "@/assets/icons/chat.png";
 import checkmark from "@/assets/icons/check.png";
 import close from "@/assets/icons/close.png";
@@ -52,6 +53,7 @@ export const icons = {
   arrowDown,
   arrowUp,
   backArrow,
+  bike,
   chat,
   checkmark,
   close,
@@ -80,14 +82,14 @@ export const onboarding = [
     id: 1,
     title: "The perfect ride is just a tap away!",
     description:
-      "Your journey begins with Ryde. Find your ideal ride effortlessly.",
+      "Your journey begins with Sarathi. Find your ideal ride effortlessly.",
     image: require("@/assets/images/onboarding1.png"),
   },
   {
     id: 2,
-    title: "Best car in your hands with Ryde",
+    title: "Best car in your hands with Sarathi",
     description:
-      "Discover the convenience of finding your perfect ride with Ryde",
+      "Discover the convenience of finding your perfect ride with Sarathi",
     image: require("@/assets/images/onboarding2.png"),
   },
   {

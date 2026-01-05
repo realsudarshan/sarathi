@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
 import { Image, ImageSourcePropType, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { icons } from "@/constants";
 
@@ -27,6 +28,8 @@ const TabIcon = ({
 );
 //for tabs with icon chat,home,profile,rides
 export default function Layout() {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tabs
       initialRouteName="home"
@@ -40,7 +43,7 @@ export default function Layout() {
           paddingBottom: 0, // ios only
           overflow: "hidden",
           marginHorizontal: 20,
-          marginBottom: 20,
+          marginBottom: Math.max(insets.bottom, 20),
           height: 78,
           display: "flex",
           justifyContent: "space-between",

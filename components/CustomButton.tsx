@@ -11,7 +11,8 @@ import {ButtonProps} from "@/types/type"
   outline: "bg-transparent border-neutral-300 border-[0.5px]",
   // add more variants here...
 };
-const getBgVariantStyle = (variant?: ButtonProps["bgVariant"]) => {
+const getBgVariantStyle = (variant?: ButtonProps["bgVariant"], disabled?: boolean) => {
+  if (disabled) return "bg-gray-300";
   return bgVariantStyles[variant!] ?? "bg-[#0286FF]";
 };
 const textVariantStyles: Record<NonNullable<ButtonProps["textVariant"]>, string> = {
@@ -35,12 +36,14 @@ export const CustomButton = ({
   IconLeft,
   IconRight,
   className,
+  disabled = false,
   ...props
-}: ButtonProps)=>{
+}: ButtonProps & { disabled?: boolean })=>{
     return(
         <TouchableOpacity
         onPress={onPress}
-        className={'w-full rounded-full p-3 flex flex-row justify-center items-center shadow-md shadow-neutral-400/70 ${getBgVariantStyle(bgVariant)} ${className}'}
+        disabled={disabled}
+        className={'w-full rounded-full p-3 flex flex-row justify-center items-center shadow-md shadow-neutral-400/70 ${getBgVariantStyle(bgVariant, disabled)} ${className}'}
         {...props}>
             {IconLeft && <IconLeft/>}
             <Text className={'text-lg font-bold ${getTextVariantStyle{textVariant)}'}>{title}</Text>

@@ -1,7 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 
 export async function GET(request: Request, { id }: { id: string }) {
-  console.log("The ride id is",id);
+  
   if (!id)
     return Response.json({ error: "Missing required fields" }, { status: 400 });
 
@@ -21,7 +21,7 @@ export async function GET(request: Request, { id }: { id: string }) {
     }
     
     const userId = userResult[0].id;
-    console.log("The internal user_id is", userId);
+  
     
     const response = await sql`
         SELECT
@@ -54,7 +54,7 @@ export async function GET(request: Request, { id }: { id: string }) {
         ORDER BY 
             rides.created_at DESC;
     `;
-console.log("The response is",response);
+
     return Response.json({ data: response });
   } catch (error) {
     console.error("Error fetching recent rides:", error);
