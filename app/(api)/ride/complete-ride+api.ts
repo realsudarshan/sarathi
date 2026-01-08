@@ -34,10 +34,9 @@ export async function POST(request: Request) {
         );
       }
 
-      console.log('Ride completed in DB:', response[0]);
+    
       return Response.json({ data: response[0] }, { status: 200 });
     } catch (dbError) {
-      console.log('New columns not found, using fallback update');
       // Fallback: update only basic columns if new columns don't exist
       const response = await sql`
         UPDATE rides 
@@ -54,7 +53,6 @@ export async function POST(request: Request) {
         );
       }
 
-      console.log('Ride completed in DB (fallback):', response[0]);
       return Response.json({ data: response[0] }, { status: 200 });
     }
   } catch (error) {

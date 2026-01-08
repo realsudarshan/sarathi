@@ -33,7 +33,6 @@ const Map = () => {
         userLongitude,
       });
       setMarkers(newMarkers);
-      console.log("Markers created:", newMarkers.length);
     }
   }, [drivers, userLatitude, userLongitude]);
 
@@ -72,7 +71,6 @@ const Map = () => {
       icon: driverIcon ?? undefined,
     })),
   ];
-  console.log("THe mapmarkers are", mapMarkers);
 
   const cameraPosition = {
     coordinates: {

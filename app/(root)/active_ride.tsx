@@ -8,7 +8,6 @@ const ActiveRideScreen = () => {
   const router = useRouter()
 
   const handleRideComplete = () => {
-    console.log('Ride completed, navigating to home')
     // Navigate back to home with replace to clear navigation stack
     router.replace('/(root)/(tabs)/home')
   }

@@ -32,20 +32,7 @@ const Bookride = ({ onBackPress }: BookrideProps) => {
       setIsBooking(true)
 
       // Create ride in database
-      console.log('Booking ride with data:', {
-        origin_address: userAddress,
-        destination_address: destinationAddress,
-        origin_latitude: userLatitude,
-        origin_longitude: userLongitude,
-        destination_latitude: destinationLatitude,
-        destination_longitude: destinationLongitude,
-        ride_time: 30,
-        fare_price: 250,
-        payment_status: 'pending',
-        driver_id: driver.id,
-        user_id: user.id,
-      })
-
+     
       const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/(api)/ride/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -65,7 +52,6 @@ const Bookride = ({ onBackPress }: BookrideProps) => {
       })
 
       const responseData = await response.json()
-      console.log('API Response:', response.status, responseData)
 
       if (!response.ok) {
         throw new Error(responseData.error || 'Failed to create ride')
@@ -73,7 +59,6 @@ const Bookride = ({ onBackPress }: BookrideProps) => {
 
       const ride = responseData.data as Ride
 
-      console.log('Ride created:', ride)
 
       // Set active ride in store
       setActiveRide({
@@ -85,7 +70,6 @@ const Bookride = ({ onBackPress }: BookrideProps) => {
         },
       })
 
-      console.log('Active ride set in store')
 
       // Navigate to active ride screen
       router.push('/(root)/active_ride')

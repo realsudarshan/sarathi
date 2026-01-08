@@ -18,8 +18,6 @@ const ActiveRide = ({ onRideComplete }: ActiveRideProps) => {
 
   // Debug logging
   useEffect(() => {
-    console.log('ActiveRide component mounted')
-    console.log('Current activeRide:', activeRide)
   }, [activeRide])
 
   // Start tracking location updates
@@ -95,7 +93,6 @@ const ActiveRide = ({ onRideComplete }: ActiveRideProps) => {
         return
       }
 
-      console.log('Completing ride:', activeRide.id)
 
       // Update ride status to completed
       const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/(api)/ride/complete-ride`, {
@@ -110,7 +107,6 @@ const ActiveRide = ({ onRideComplete }: ActiveRideProps) => {
 
       if (response.ok) {
         const data = await response.json()
-        console.log('Ride completed successfully:', data)
         
         // Stop location tracking
         if (locationSubscription) {

@@ -53,7 +53,6 @@ const RideMap = () => {
           data.routes[0].overview_polyline.points
         );
         setRouteCoordinates(points);
-        console.log("Route coordinates fetched:", points.length);
       }
     } catch (error) {
       console.error("Failed to fetch route:", error);

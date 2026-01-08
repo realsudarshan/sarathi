@@ -43,7 +43,6 @@ const Rides = () => {
 
   const handleFindRide = () => {
     setShowBookRide(true)
-    console.log('Find Ride clicked')
   }
 
   return (
