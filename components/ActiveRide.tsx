@@ -72,7 +72,7 @@ const ActiveRide = ({ onRideComplete }: ActiveRideProps) => {
     try {
       if (!activeRide?.id) return
 
-      await fetch('/api/ride/update-location', {
+      await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/(api)/ride/update-location`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
