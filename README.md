@@ -13,7 +13,6 @@ A modern ride-hailing mobile application built with React Native and Expo. Sarat
 - 🗺️ **Real-time Maps** - Interactive maps with Google Maps (Android) and Apple Maps (iOS)
 - 📍 **Location Services** - GPS-based location tracking and route planning
 - 🚗 **Ride Booking** - Browse available drivers and book rides
-- 💳 **Payment Integration** - Seamless payment processing
 - 📱 **Cross-platform** - Works on both Android and iOS
 - 🎨 **Modern UI** - Beautiful, responsive design with NativeWind (Tailwind CSS)
 
